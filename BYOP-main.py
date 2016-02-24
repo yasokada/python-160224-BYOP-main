@@ -9,6 +9,12 @@ import serial
 #-----------------
 
 '''
+v0.3 2016 Feb. 24
+  - group_run commands
+      + hello
+      + check
+      + get
+      + post
 v0.2 2016 Feb. 24
   - add serial print
 v0.1 2016 Feb. 24
@@ -20,12 +26,19 @@ usleep = lambda x: time.sleep(x/1000000.0)
 
 con1 = serial.Serial('/dev/ttyAMA0', 115200, timeout=0.1)
 
-def main():
-    while True:
-        time.sleep(1.0); # second
-        msg = "hello,1,7of9\n"
+cmdlines = [
+    "hello,1,7of9",
+    "check",
+    "get",
+    "post,Vital,hello_Vital,0"
+    ]
+
+def main():    
+    for idx in range (4):
+        msg = cmdlines[idx] + "\n"
         print msg,
         con1.write(msg)
+        time.sleep(5.0); # second
 
 if __name__ == '__main__':
     main()
