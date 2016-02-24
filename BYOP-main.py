@@ -9,6 +9,8 @@ import serial
 #-----------------
 
 '''
+v0.4 2016 Feb. 24
+  - add contact by Vital
 v0.3 2016 Feb. 24
   - group_run commands
       + hello
@@ -30,11 +32,15 @@ cmdlines = [
     "hello,1,7of9",
     "check",
     "get",
-    "post,Vital,hello_Vital,0"
+    "post,Vital,hello_Vital,0",
+    "hello,2,Vital",
+    "check",
+    "get",
+    "post,7of9,hello_7of9,0"
     ]
 
 def main():    
-    for idx in range (4):
+    for idx in range (8):
         msg = cmdlines[idx] + "\n"
         print msg,
         con1.write(msg)
