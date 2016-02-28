@@ -10,6 +10,7 @@ import serial
 
 '''
 v0.5 2016 Feb. 29
+  - add read_name()
   - add debug_outputDebugString()
 v0.4 2016 Feb. 24
   - add contact by Vital
@@ -28,6 +29,7 @@ v0.1 2016 Feb. 24
 import time
 import os.path
 usleep = lambda x: time.sleep(x/1000000.0)
+s_name = "WHO_AM_I"
 
 con1 = serial.Serial('/dev/ttyAMA0', 115200, timeout=0.1)
 
@@ -47,6 +49,14 @@ def debug_outputDebugString(prfx, msg):
 
 def read_name():
     debug_outputDebugString("read_name","Line49 > start")
+    srcpath="/home/pi/BYOP/name.txt"
+
+    if os.path.isfile(srcpath) == False:
+        debug_outputDebugString("read_name","Line53 > name.txt not found");
+        return
+    with open(srcpath,"r") as nmfd:
+        s_name = nmfd.read()
+        print "name.txt:" + s_name
     
 def main():
     read_name()
