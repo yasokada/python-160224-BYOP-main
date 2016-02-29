@@ -9,6 +9,8 @@ import serial
 #-----------------
 
 '''
+v0.7 2016 Feb. 29
+  - add comm_bye()
   - add comm_hello()
 v0.6 2016 Feb. 29
   - add comm_post()
@@ -86,8 +88,15 @@ def comm_post(sends, dstcon):
 
 def comm_hello(name,dstcon):
     msg="hello,1," + name # TODO: 0m > serial number > not 1
+    debug_outputDebugString("comm_hello",msg)
+    dstcon.write(msg)
+    time.sleep(5.0) # second
+
+def comm_bye(dstcon):
+    msg="bye\n"
+    debug_outputDebugString("comm_bye",msg)
     print msg
-    con1.write(msg)
+    dstcon.write(msg)
     time.sleep(5.0) # second
     
 def main():
@@ -96,6 +105,8 @@ def main():
     
     sends = read_sendtext()
     comm_post(sends,con1)
+
+    comm_bye(con1)
 
 '''    
     for idx in range (8):
