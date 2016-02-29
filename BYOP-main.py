@@ -85,14 +85,14 @@ def append_rcvdtext(appends):
 
     debug_outputDebugString("append_rcvdtext","Line85 > " + appends)
 
-    wrlines = ""
+    orglines = ""
     if os.path.isfile(srcpath):
         rdfd = open(srcpath)
-        wrlines = rdfd.readlines()
+        orglines = rdfd.readlines()
         rdfd.close()
 
     wrfd = open(srcpath, "w")
-    wrfd.writelines(wrlines)
+    wrfd.writelines(orglines)
     wrfd.writelines(appends)
     wrfd.close()
 
