@@ -9,6 +9,8 @@ import serial
 #-----------------
 
 '''
+v0.8 2016 Feb. 29
+  - add append_rcvdtext()
 v0.7 2016 Feb. 29
   - add comm_bye()
   - add comm_hello()
@@ -77,6 +79,26 @@ def read_name():
         debug_outputDebugString("read_name","Line63 > name:" + mynm)
     return mynm
 
+def append_rcvdtext(appends):
+    debug_outputDebugString("append_rcvdtext","Line82 > start")
+    srcpath="/home/pi/BYOP/rcvd.txt"
+
+    debug_outputDebugString("append_rcvdtext","Line85 > " + appends)
+
+    wrlines = ""
+    if os.path.isfile(srcpath):
+        rdfd = open(srcpath)
+        wrlines = rdfd.readlines()
+        rdfd.close()
+
+    wrfd = open(srcpath, "w")
+    wrfd.writelines(wrlines)
+    wrfd.writelines(appends)
+    wrfd.close()
+
+    debug_outputDebugString("append_rcvdtext","Line101 > fin")
+    
+
 def comm_post(sends, dstcon):
     for line in sends:
         if "//" in line:
@@ -102,6 +124,11 @@ def comm_bye(dstcon):
 def main():
     myname = read_name()
     comm_hello(myname, con1)
+
+    tomsg = "1stline\n"
+    tomsg = tomsg + "2ndline\n"
+    tomsg = tomsg + "3rdline\n"    
+    append_rcvdtext(tomsg)
     
     sends = read_sendtext()
     comm_post(sends,con1)
