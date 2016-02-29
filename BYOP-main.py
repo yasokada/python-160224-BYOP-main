@@ -9,6 +9,8 @@ import serial
 #-----------------
 
 '''
+v0.6 2016 Feb. 29
+  - add comm_post()
   - add read_sendtext()
 v0.5 2016 Feb. 29
   - add read_name()
@@ -49,34 +51,42 @@ def debug_outputDebugString(prfx, msg):
     print "[DEBUG]" + prfx + "," + msg
 
 def read_sendtext():
-    debug_outputDebugString("read_sendtext","Line52 > start")
+#    debug_outputDebugString("read_sendtext","Line52 > start")
     srcpath="/home/pi/BYOP/send.txt"
 
     if os.path.isfile(srcpath) == False:
-        debug_outputDebugString("read_sendtext","Line55 > send.txt not found");
+#        debug_outputDebugString("read_sendtext","Line55 > send.txt not found");
         return
     rdfd = open(srcpath)
     lines = rdfd.readlines()
     rdfd.close()
 
-    for line in lines:
-        if "//" not in line:
-            print line,
+    return lines
 
 def read_name():
-    debug_outputDebugString("read_name","Line49 > start")
+#    debug_outputDebugString("read_name","Line49 > start")
     srcpath="/home/pi/BYOP/name.txt"
 
     if os.path.isfile(srcpath) == False:
-        debug_outputDebugString("read_name","Line53 > name.txt not found");
+#        debug_outputDebugString("read_name","Line53 > name.txt not found");
         return
     with open(srcpath,"r") as nmfd:
         s_name = nmfd.read()
         debug_outputDebugString("read_name","Line63 > name:" + s_name)
+
+def comm_post(sends, dstcon):
+    for line in sends:
+        if "//" in line:
+            continue
+        msg="post," + line
+        print msg,
+        con1.write(msg)
+        time.sleep(5.0) # second
     
 def main():
     read_name()
-    read_sendtext()
+    sends = read_sendtext()
+    comm_post(sends,con1)
     
     for idx in range (8):
         msg = cmdlines[idx] + "\n"
