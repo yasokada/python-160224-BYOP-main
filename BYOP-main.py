@@ -9,6 +9,7 @@ import serial
 #-----------------
 
 '''
+  - add read_sendtext()
 v0.5 2016 Feb. 29
   - add read_name()
   - add debug_outputDebugString()
@@ -47,6 +48,21 @@ cmdlines = [
 def debug_outputDebugString(prfx, msg):
     print "[DEBUG]" + prfx + "," + msg
 
+def read_sendtext():
+    debug_outputDebugString("read_sendtext","Line52 > start")
+    srcpath="/home/pi/BYOP/send.txt"
+
+    if os.path.isfile(srcpath) == False:
+        debug_outputDebugString("read_sendtext","Line55 > send.txt not found");
+        return
+    rdfd = open(srcpath)
+    lines = rdfd.readlines()
+    rdfd.close()
+
+    for line in lines:
+        if "//" not in line:
+            print line,
+
 def read_name():
     debug_outputDebugString("read_name","Line49 > start")
     srcpath="/home/pi/BYOP/name.txt"
@@ -56,10 +72,11 @@ def read_name():
         return
     with open(srcpath,"r") as nmfd:
         s_name = nmfd.read()
-        print "name.txt:" + s_name
+        debug_outputDebugString("read_name","Line63 > name:" + s_name)
     
 def main():
     read_name()
+    read_sendtext()
     
     for idx in range (8):
         msg = cmdlines[idx] + "\n"
