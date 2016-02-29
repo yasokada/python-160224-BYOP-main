@@ -9,6 +9,7 @@ import serial
 #-----------------
 
 '''
+  - add comm_hello()
 v0.6 2016 Feb. 29
   - add comm_post()
   - add read_sendtext()
@@ -32,7 +33,6 @@ v0.1 2016 Feb. 24
 import time
 import os.path
 usleep = lambda x: time.sleep(x/1000000.0)
-s_name = "WHO_AM_I"
 
 con1 = serial.Serial('/dev/ttyAMA0', 115200, timeout=0.1)
 
@@ -64,15 +64,16 @@ def read_sendtext():
     return lines
 
 def read_name():
-#    debug_outputDebugString("read_name","Line49 > start")
+    debug_outputDebugString("read_name","Line49 > start")
     srcpath="/home/pi/BYOP/name.txt"
 
     if os.path.isfile(srcpath) == False:
-#        debug_outputDebugString("read_name","Line53 > name.txt not found");
+        debug_outputDebugString("read_name","Line53 > name.txt not found");
         return
     with open(srcpath,"r") as nmfd:
-        s_name = nmfd.read()
-        debug_outputDebugString("read_name","Line63 > name:" + s_name)
+        mynm = nmfd.read()
+        debug_outputDebugString("read_name","Line63 > name:" + mynm)
+    return mynm
 
 def comm_post(sends, dstcon):
     for line in sends:
@@ -82,9 +83,17 @@ def comm_post(sends, dstcon):
         print msg,
         con1.write(msg)
         time.sleep(5.0) # second
+
+def comm_hello(name,dstcon):
+    msg="hello,1," + name # TODO: 0m > serial number > not 1
+    print msg
+    con1.write(msg)
+    time.sleep(5.0) # second
     
 def main():
-    read_name()
+    myname = read_name()
+    comm_hello(myname, con1)
+    
     sends = read_sendtext()
     comm_post(sends,con1)
     
