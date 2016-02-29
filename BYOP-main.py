@@ -10,6 +10,8 @@ import serial
 
 '''
 v0.8 2016 Mar. 1
+  - add Test_extractCsvRow()
+  - add extractCsvRow()
   - add comm_check()
   - add append_rcvdtext()
 v0.7 2016 Feb. 29
@@ -135,8 +137,22 @@ def comm_bye(dstcom):
     dstcom.write(msg)
     rcvd = dstcom.readline()
     time.sleep(5.0) # second
+
+def extractCsvRow(csvline, getIdx):
+    lines = csvline.split(",")
+    if getIdx >= len(lines):
+        return ""
+    return lines[getIdx]
+
+def Test_extractCsvRow():
+    csvline="AAA,BBB,CCC"
+    print extractCsvRow(csvline, 0)
+    print extractCsvRow(csvline, 2)
+    print extractCsvRow(csvline, 4)    
     
 def main():
+    Test_extractCsvRow()
+    
     # hello
     myname = read_name()
     comm_hello(myname, con1)
