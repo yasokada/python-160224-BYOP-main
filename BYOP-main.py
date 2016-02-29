@@ -9,7 +9,8 @@ import serial
 #-----------------
 
 '''
-v0.8 2016 Feb. 29
+v0.8 2016 Mar. 1
+  - add comm_check()
   - add append_rcvdtext()
 v0.7 2016 Feb. 29
   - add comm_bye()
@@ -80,7 +81,7 @@ def read_name():
     return mynm
 
 def append_rcvdtext(appends):
-    debug_outputDebugString("append_rcvdtext","Line82 > start")
+#    debug_outputDebugString("append_rcvdtext","Line82 > start")
     srcpath="/home/pi/BYOP/rcvd.txt"
 
     debug_outputDebugString("append_rcvdtext","Line85 > " + appends)
@@ -96,7 +97,7 @@ def append_rcvdtext(appends):
     wrfd.writelines(appends)
     wrfd.close()
 
-    debug_outputDebugString("append_rcvdtext","Line101 > fin")
+#    debug_outputDebugString("append_rcvdtext","Line101 > fin")
     
 
 def comm_post(sends, dstcom):
@@ -106,12 +107,25 @@ def comm_post(sends, dstcom):
         msg="post," + line
         print msg,
         dstcom.write(msg)
+        rcvd = dstcom.readline()
         time.sleep(5.0) # second
 
+def comm_check(dstcom):
+    debug_outputDebugString("comm_check","Line112 > start")
+    cmd="check\n"
+    dstcom.write(cmd)
+    rcvd = dstcom.readline()
+    debug_outputDebugString("comm_check","Line119 >" + rcvd)
+    if len(rcvd) == 0:
+        return 0
+    # TODO: 0a > extractCsvRow() 
+
+    
 def comm_hello(name, dstcom):
     msg="hello,1," + name # TODO: 0m > serial number > not 1
     debug_outputDebugString("comm_hello",msg)
     dstcom.write(msg)
+    rcvd = dstcom.readline() # TODO: 0m > check when ESP8266 is not connected
     time.sleep(5.0) # second
 
 def comm_bye(dstcom):
@@ -119,6 +133,7 @@ def comm_bye(dstcom):
     debug_outputDebugString("comm_bye",msg)
     print msg
     dstcom.write(msg)
+    rcvd = dstcom.readline()
     time.sleep(5.0) # second
     
 def main():
@@ -127,6 +142,7 @@ def main():
     comm_hello(myname, con1)
 
     # message receive
+    comm_check(con1)
     tomsg = "1stline\n"
     tomsg = tomsg + "2ndline\n"
     tomsg = tomsg + "3rdline\n"    
