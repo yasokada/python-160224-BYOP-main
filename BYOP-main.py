@@ -96,12 +96,14 @@ def main():
     
     sends = read_sendtext()
     comm_post(sends,con1)
-    
+
+'''    
     for idx in range (8):
         msg = cmdlines[idx] + "\n"
         print msg,
         con1.write(msg)
         time.sleep(5.0); # second
+'''        
 
 if __name__ == '__main__':
     main()
