@@ -99,40 +99,44 @@ def append_rcvdtext(appends):
     debug_outputDebugString("append_rcvdtext","Line101 > fin")
     
 
-def comm_post(sends, dstcon):
+def comm_post(sends, dstcom):
     for line in sends:
         if "//" in line:
             continue
         msg="post," + line
         print msg,
-        con1.write(msg)
+        dstcom.write(msg)
         time.sleep(5.0) # second
 
-def comm_hello(name,dstcon):
+def comm_hello(name, dstcom):
     msg="hello,1," + name # TODO: 0m > serial number > not 1
     debug_outputDebugString("comm_hello",msg)
-    dstcon.write(msg)
+    dstcom.write(msg)
     time.sleep(5.0) # second
 
-def comm_bye(dstcon):
+def comm_bye(dstcom):
     msg="bye\n"
     debug_outputDebugString("comm_bye",msg)
     print msg
-    dstcon.write(msg)
+    dstcom.write(msg)
     time.sleep(5.0) # second
     
 def main():
+    # hello
     myname = read_name()
     comm_hello(myname, con1)
 
+    # message receive
     tomsg = "1stline\n"
     tomsg = tomsg + "2ndline\n"
     tomsg = tomsg + "3rdline\n"    
     append_rcvdtext(tomsg)
-    
+
+    # message post
     sends = read_sendtext()
     comm_post(sends,con1)
 
+    # bye
     comm_bye(con1)
 
 '''    
