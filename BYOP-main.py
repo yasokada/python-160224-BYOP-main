@@ -10,6 +10,7 @@ import serial
 
 '''
 v0.9 2016 Mar. 2
+  - add trim_mySerial()
   - add read_mySerial()
 v0.8 2016 Mar. 1
   - add Test_extractCsvRow()
@@ -104,7 +105,7 @@ def append_rcvdtext(appends):
 #    debug_outputDebugString("append_rcvdtext","Line101 > fin")
 
 def read_mySerial():
-    debug_outputDebugString("read_mySerial","Line105 > start")
+#    debug_outputDebugString("read_mySerial","Line105 > start")
     srcpath="/proc/cpuinfo"
     if os.path.isfile(srcpath) == False:
         debug_outputDebugString("read_mySerial","Line107 > no cpuinfo")
@@ -119,7 +120,10 @@ def read_mySerial():
             mySerial = items[1]
 #            print line
     return mySerial
-    
+
+def trim_mySerial(mySrl):
+    # use only three in order not to disclose information related to security
+    return mySrl[13:-1]
 
 def comm_post(sends, dstcom):
     for line in sends:
@@ -172,7 +176,9 @@ def Test_extractCsvRow():
 def main():
 #    Test_extractCsvRow()
 
+    # read serial
     mySerial = read_mySerial()
+    mySerial = trim_mySerial(mySerial)
     debug_outputDebugString("main","Line175 > Serial:" + mySerial)
     
     # hello
