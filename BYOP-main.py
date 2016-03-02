@@ -9,6 +9,8 @@ import serial
 #-----------------
 
 '''
+v0.10 2016 Mar. 3
+  - add comm_get() in progress
   - update comm_hello() to take [mySrl(Serial)] parameter 
   - update comm_check()
 v0.9 2016 Mar. 2
@@ -148,8 +150,20 @@ def comm_check(dstcom):
     nummsg = extractCsvRow(rcvd, 1) # rcvd:[check,3\n]
     return int(nummsg)
 
+def comm_get(nummsg, dstcom):
 
-    # TODO: 0m > use mySerial
+#    nummsg = 5 # for debug
+
+    debug_outputDebugString("comm_get","Line152 > start")
+    for loop in range(nummsg):
+        cmd = "get\n"
+        dstcom.write(cmd)
+        rcvd = dstcom.readline()
+        print "rcvd:" + rcvd
+    # TODO: 0a > receive sender name also
+    return "TEST"
+
+
 def comm_hello(name, mySrl, dstcom):
     msg="hello," + mySrl + "," + name
     debug_outputDebugString("comm_hello",msg)
@@ -192,6 +206,7 @@ def main():
     # check number of messages to receive
     nummsg = comm_check(con1)
 #    debug_outputDebugString("main","Line194 > check:" + str(nummsg))
+    rcvds = comm_get(nummsg, con1)
     
     tomsg = "1stline\n"
     tomsg = tomsg + "2ndline\n"
