@@ -9,6 +9,7 @@ import serial
 #-----------------
 
 '''
+  - update comm_check()
 v0.9 2016 Mar. 2
   - add trim_mySerial()
   - add read_mySerial()
@@ -143,9 +144,11 @@ def comm_check(dstcom):
     debug_outputDebugString("comm_check","Line119 >" + rcvd)
     if len(rcvd) == 0:
         return 0
-    # TODO: 0a > extractCsvRow() 
+    nummsg = extractCsvRow(rcvd, 1) # rcvd:[check,3\n]
+    return int(nummsg)
 
-    
+
+    # TODO: 0m > use mySerial
 def comm_hello(name, dstcom):
     msg="hello,1," + name # TODO: 0m > serial number > not 1
     debug_outputDebugString("comm_hello",msg)
@@ -186,7 +189,9 @@ def main():
     comm_hello(myname, con1)
 
     # message receive
-    comm_check(con1)
+    nummsg = comm_check(con1)
+    debug_outputDebugString("main","Line194 > check:" + str(nummsg))
+    
     tomsg = "1stline\n"
     tomsg = tomsg + "2ndline\n"
     tomsg = tomsg + "3rdline\n"    
