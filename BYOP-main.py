@@ -9,6 +9,7 @@ import serial
 #-----------------
 
 '''
+  - update comm_hello() to take [mySrl(Serial)] parameter 
   - update comm_check()
 v0.9 2016 Mar. 2
   - add trim_mySerial()
@@ -149,8 +150,8 @@ def comm_check(dstcom):
 
 
     # TODO: 0m > use mySerial
-def comm_hello(name, dstcom):
-    msg="hello,1," + name # TODO: 0m > serial number > not 1
+def comm_hello(name, mySrl, dstcom):
+    msg="hello," + mySrl + "," + name
     debug_outputDebugString("comm_hello",msg)
     dstcom.write(msg)
     rcvd = dstcom.readline() # TODO: 0m > check when ESP8266 is not connected
@@ -186,11 +187,11 @@ def main():
     
     # hello
     myname = read_name()
-    comm_hello(myname, con1)
+    comm_hello(myname, mySerial, con1)
 
-    # message receive
+    # check number of messages to receive
     nummsg = comm_check(con1)
-    debug_outputDebugString("main","Line194 > check:" + str(nummsg))
+#    debug_outputDebugString("main","Line194 > check:" + str(nummsg))
     
     tomsg = "1stline\n"
     tomsg = tomsg + "2ndline\n"
