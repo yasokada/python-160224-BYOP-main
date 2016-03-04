@@ -78,7 +78,7 @@ def read_sendtext():
     return lines
 
 def read_name():
-    debug_outputDebugString("read_name","Line49 > start")
+#    debug_outputDebugString("read_name","Line49 > start")
     srcpath="/home/pi/BYOP/name.txt"
 
     if os.path.isfile(srcpath) == False:
@@ -86,7 +86,7 @@ def read_name():
         return
     with open(srcpath,"r") as nmfd:
         mynm = nmfd.read()
-        debug_outputDebugString("read_name","Line63 > name:" + mynm)
+#        debug_outputDebugString("read_name","Line63 > name:" + mynm)
     return mynm
 
 def append_rcvdtext(appends):
@@ -197,7 +197,7 @@ def main():
     # read serial
     mySerial = read_mySerial()
     mySerial = trim_mySerial(mySerial)
-    debug_outputDebugString("main","Line175 > Serial:" + mySerial)
+#    debug_outputDebugString("main","Line175 > Serial:" + mySerial)
     
     # hello
     myname = read_name()
