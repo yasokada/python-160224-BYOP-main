@@ -9,6 +9,8 @@ import serial
 #-----------------
 
 '''
+  - impl proc_get()
+      + get sender name
 v0.10 2016 Mar. 3
   - add comm_get() in progress
   - update comm_hello() to take [mySrl(Serial)] parameter 
@@ -148,19 +150,24 @@ def comm_check(dstcom):
     if len(rcvd) == 0:
         return 0
     nummsg = extractCsvRow(rcvd, 1) # rcvd:[check,3\n]
+    time.sleep(5.0) # second
     return int(nummsg)
 
 def comm_get(nummsg, dstcom):
-
-#    nummsg = 5 # for debug
-
-    debug_outputDebugString("comm_get","Line152 > start")
+#    debug_outputDebugString("comm_get","Line152 > start")
     for loop in range(nummsg):
         cmd = "get\n"
         dstcom.write(cmd)
+        time.sleep(2.0) #second (for message station to show [sender] on LCD)
+
         rcvd = dstcom.readline()
-        print "rcvd:" + rcvd
-    # TODO: 0a > receive sender name also
+        if len(rcvd) == 0:
+            continue
+        sndr = extractCsvRow(rcvd, 1)
+        msg = extractCsvRow(rcvd, 2)
+        debug_outputDebugString("comm_get","Line166 > sender:" + sndr)
+        debug_outputDebugString("comm_get","Line167 > message:" + msg)
+        time.sleep(5.0) # second
     return "TEST"
 
 
