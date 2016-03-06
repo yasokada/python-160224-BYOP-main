@@ -9,7 +9,9 @@ import serial
 #-----------------
 
 '''
+v0.11 2016 Mar. 7
   - impl proc_get()
+      + return received strings to appened to [rcvd.txt]
       + get sender name
 v0.10 2016 Mar. 3
   - add comm_get() in progress
@@ -77,6 +79,8 @@ def read_sendtext():
     lines = rdfd.readlines()
     rdfd.close()
 
+#    debug_outputDebugString("read_sendtext","Line80 > lines:" + str(lines))
+
     return lines
 
 def read_name():
@@ -142,7 +146,7 @@ def comm_post(sends, dstcom):
         time.sleep(5.0) # second
 
 def comm_check(dstcom):
-    debug_outputDebugString("comm_check","Line112 > start")
+#    debug_outputDebugString("comm_check","Line112 > start")
     cmd="check\n"
     dstcom.write(cmd)
     rcvd = dstcom.readline()
@@ -155,20 +159,27 @@ def comm_check(dstcom):
 
 def comm_get(nummsg, dstcom):
 #    debug_outputDebugString("comm_get","Line152 > start")
+    retstr = ""
     for loop in range(nummsg):
         cmd = "get\n"
         dstcom.write(cmd)
         time.sleep(2.0) #second (for message station to show [sender] on LCD)
 
         rcvd = dstcom.readline()
+        rcvd = rcvd.rstrip() # to remove <LF>
         if len(rcvd) == 0:
             continue
         sndr = extractCsvRow(rcvd, 1)
         msg = extractCsvRow(rcvd, 2)
-        debug_outputDebugString("comm_get","Line166 > sender:" + sndr)
-        debug_outputDebugString("comm_get","Line167 > message:" + msg)
+        scrt = extractCsvRow(rcvd, 3)
+#        debug_outputDebugString("comm_get","Line166 > sender:" + sndr)
+#        debug_outputDebugString("comm_get","Line167 > message:" + msg)
+#        debug_outputDebugString("comm_get","Line168 > secret:" + scrt)
         time.sleep(5.0) # second
-    return "TEST"
+
+        # TODO: 0c > add timestamp of the message post
+        retstr = retstr + sndr + "," + msg + "," + scrt + "\n"
+    return retstr
 
 
 def comm_hello(name, mySrl, dstcom):
@@ -213,16 +224,20 @@ def main():
     # check number of messages to receive
     nummsg = comm_check(con1)
 #    debug_outputDebugString("main","Line194 > check:" + str(nummsg))
-    rcvds = comm_get(nummsg, con1)
-    
-    tomsg = "1stline\n"
-    tomsg = tomsg + "2ndline\n"
-    tomsg = tomsg + "3rdline\n"    
+
+    # get message
+    tomsg = comm_get(nummsg, con1)
+    debug_outputDebugString("main","Line225 > comm_get:" + tomsg)     
     append_rcvdtext(tomsg)
 
-    # message post
+    # post message
     sends = read_sendtext()
     comm_post(sends,con1)
+
+    # if 1
+    nummsg = comm_check(con1)
+
+    # TODO: 0m > add proc_storage()
 
     # bye
     comm_bye(con1)
