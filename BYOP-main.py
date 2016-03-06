@@ -9,6 +9,8 @@ import serial
 #-----------------
 
 '''
+v0.12 2016 Mar. 7
+  - impl proc_storage() to show storage usage
 v0.11 2016 Mar. 7
   - impl proc_get()
       + return received strings to appened to [rcvd.txt]
@@ -157,6 +159,14 @@ def comm_check(dstcom):
     time.sleep(5.0) # second
     return int(nummsg)
 
+def comm_storage(dstcom):
+    cmd="storage\n"
+    dstcom.write(cmd)
+    rcvd = dstcom.readline()
+    debug_outputDebugString("comm_storage","Line164 >" + rcvd)
+    if len(rcvd) == 0:
+        return
+
 def comm_get(nummsg, dstcom):
 #    debug_outputDebugString("comm_get","Line152 > start")
     retstr = ""
@@ -241,6 +251,9 @@ def main():
 
     # bye
     comm_bye(con1)
+
+    # check storage
+    comm_storage(con1)
 
 '''    
     for idx in range (8):
