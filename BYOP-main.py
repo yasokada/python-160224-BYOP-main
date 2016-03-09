@@ -9,7 +9,9 @@ import serial
 #-----------------
 
 '''
-
+v0.13 2016 Mar. 10
+  - add string_removeCRLF()
+  - comm_post() takes [modiDate] arg
   - add read_fileModificationDate()
 v0.12 2016 Mar. 7
   - impl proc_storage() to show storage usage
@@ -71,6 +73,9 @@ cmdlines = [
 
 def debug_outputDebugString(prfx, msg):
     print "[DEBUG]" + prfx + "," + msg
+
+def string_removeCRLF(srcstr):
+    return srcstr.rstrip()
 
 def read_fileModificationDate_sendText():
     srcpath="/home/pi/BYOP/send.txt"    
@@ -146,11 +151,13 @@ def trim_mySerial(mySrl):
     # use only three in order not to disclose information related to security
     return mySrl[13:-1]
 
-def comm_post(sends, dstcom):
+def comm_post(sends, modiDate, dstcom):
     for line in sends:
         if "//" in line:
             continue
-        msg="post," + line
+        line = string_removeCRLF(line)
+        msg = "post," + line
+        msg = msg + "," + modiDate + "\n"
         print msg,
         dstcom.write(msg)
         rcvd = dstcom.readline()
@@ -253,7 +260,7 @@ def main():
     sends = read_sendtext()
     modiDate = read_fileModificationDate_sendText()
     debug_outputDebugString("main","Line255 > modiDate:" + modiDate)     
-    comm_post(sends,con1)
+    comm_post(sends, modiDate, con1)
 
     # if 1
     nummsg = comm_check(con1)
