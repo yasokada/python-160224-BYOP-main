@@ -9,6 +9,8 @@ import serial
 #-----------------
 
 '''
+
+  - add read_fileModificationDate()
 v0.12 2016 Mar. 7
   - impl proc_storage() to show storage usage
 v0.11 2016 Mar. 7
@@ -69,6 +71,13 @@ cmdlines = [
 
 def debug_outputDebugString(prfx, msg):
     print "[DEBUG]" + prfx + "," + msg
+
+def read_fileModificationDate_sendText():
+    srcpath="/home/pi/BYOP/send.txt"    
+    mddt = time.ctime(os.path.getmtime(srcpath))
+    parsed = time.strptime(mddt)
+    yyyymmdd = time.strftime("%Y%m%d", parsed)
+    return yyyymmdd
 
 def read_sendtext():
 #    debug_outputDebugString("read_sendtext","Line52 > start")
@@ -242,6 +251,8 @@ def main():
 
     # post message
     sends = read_sendtext()
+    modiDate = read_fileModificationDate_sendText()
+    debug_outputDebugString("main","Line255 > modiDate:" + modiDate)     
     comm_post(sends,con1)
 
     # if 1
