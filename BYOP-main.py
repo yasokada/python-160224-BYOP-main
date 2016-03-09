@@ -9,6 +9,7 @@ import serial
 #-----------------
 
 '''
+  - comm_get() reads [modiDate]
 v0.13 2016 Mar. 10
   - add string_removeCRLF()
   - comm_post() takes [modiDate] arg
@@ -199,13 +200,15 @@ def comm_get(nummsg, dstcom):
         sndr = extractCsvRow(rcvd, 1)
         msg = extractCsvRow(rcvd, 2)
         scrt = extractCsvRow(rcvd, 3)
+        modidt = extractCsvRow(rcvd, 4)
 #        debug_outputDebugString("comm_get","Line166 > sender:" + sndr)
 #        debug_outputDebugString("comm_get","Line167 > message:" + msg)
 #        debug_outputDebugString("comm_get","Line168 > secret:" + scrt)
         time.sleep(5.0) # second
 
         # TODO: 0c > add timestamp of the message post
-        retstr = retstr + sndr + "," + msg + "," + scrt + "\n"
+        retstr = retstr + sndr + "," + msg + "," + scrt
+        retstr = retstr + "," + modidt + "\n"
     return retstr
 
 
