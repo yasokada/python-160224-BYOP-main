@@ -9,6 +9,9 @@ import serial
 #-----------------
 
 '''
+v0.14 2016 Mar. 10
+  - if NoneType in Main() before comm_post()
+  - fix bug > read_fileModificationDate_sendText() > file not found
   - comm_get() reads [modiDate]
 v0.13 2016 Mar. 10
   - add string_removeCRLF()
@@ -80,6 +83,8 @@ def string_removeCRLF(srcstr):
 
 def read_fileModificationDate_sendText():
     srcpath="/home/pi/BYOP/send.txt"    
+    if os.path.isfile(srcpath) == False:
+        return ""
     mddt = time.ctime(os.path.getmtime(srcpath))
     parsed = time.strptime(mddt)
     yyyymmdd = time.strftime("%Y%m%d", parsed)
@@ -262,9 +267,10 @@ def main():
 
     # post message
     sends = read_sendtext()
-    modiDate = read_fileModificationDate_sendText()
-    debug_outputDebugString("main","Line255 > modiDate:" + modiDate)     
-    comm_post(sends, modiDate, con1)
+    if sends != None:
+        modiDate = read_fileModificationDate_sendText()
+        debug_outputDebugString("main","Line255 > modiDate:" + modiDate)     
+        comm_post(sends, modiDate, con1)
 
     # if 1
     nummsg = comm_check(con1)
