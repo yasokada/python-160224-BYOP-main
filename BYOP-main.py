@@ -158,7 +158,8 @@ def comm_post(sends, modiDate, dstcom):
         line = string_removeCRLF(line)
         msg = "post," + line
         msg = msg + "," + modiDate + "\n"
-        print msg,
+#        print msg,
+        debug_outputDebugString("comm_post","Line162 >" + msg)
         dstcom.write(msg)
         rcvd = dstcom.readline()
         time.sleep(5.0) # second
